@@ -1,0 +1,25 @@
+# uniquename:................................Must be a unique top level value in the config. Call it what you want, as long as it doesn't share a name with another top level value.
+    # -name: "name"..........................Used to identify what block is to be placed/a
+    # -fromblocktype: Block_Type ............The block ID of the block held in the user's hand. Look this up here http://minecraft.gamepedia.com/Data_values#Block_IDs (use the dec values)
+    # -toblocktype: Block_Type...............The block ID of the block you want to be placed instead
+    # -toblockdata: 10.......................The byte data (-127 through 128, usually 0 through 15) that determines the block data. Look this up on the wiki http://minecraft.gamepedia.com/Data_values#Data
+# redstalk:
+  # -name: "stalk"
+  # -fromblocktype: 99
+  # -toblocktype: 99
+  # -toblockdata: 10 
+# brownstalk:
+  # -name: "stalk"
+  # -fromblocktype: 100
+  # -toblocktype: 100
+  # -toblockdata: 10
+redstalk:
+  name: "stalk"
+  fromblocktype: 99
+  toblocktype: 99
+  toblockdata: 10
+brownstalk:
+  name: "stalk"
+  fromblocktype: 100
+  toblocktype: 100
+  toblockdata: 10

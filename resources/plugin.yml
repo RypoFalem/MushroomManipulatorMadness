@@ -1,0 +1,5 @@
+name: MushroomManipulatorMadness
+version: 1.8-1.0
+description: Replace a placed block with another block
+author: RypoFalem
+main: io.github.rypofalem.mushroommanipulatormadness.MushroomManipulatorMadnessPlugin
