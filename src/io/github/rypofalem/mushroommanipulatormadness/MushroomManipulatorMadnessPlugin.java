@@ -29,44 +29,41 @@ public class MushroomManipulatorMadnessPlugin extends JavaPlugin implements List
 		HashSet<String> blockSet = (HashSet<String>) getConfig().getKeys(false);
 		for(String uniqueName : blockSet){
 			uniqueName = uniqueName.trim();
-			getServer().broadcastMessage(uniqueName);
-
 			if(!getConfig().isString(uniqueName +".name")){
-				getServer().broadcastMessage(uniqueName +".name" + "is invalid and couldn't be loaded");
+				getServer().getLogger().info(uniqueName +".name" + "is missing or invalid and couldn't be loaded");
+				continue;
 			}
 			if(!getConfig().isInt(uniqueName +".fromblocktype")){
-				getServer().broadcastMessage(uniqueName +".fromblocktype" + "is invalid and couldn't be loaded");
+				getServer().getLogger().info(uniqueName +".fromblocktype" + "is missing or invalid and couldn't be loaded");
+				continue;
 			}
 			if(!getConfig().isInt(uniqueName +".toblocktype")){
-				getServer().broadcastMessage(uniqueName +".toblocktype" + "is invalid and couldn't be loaded");
+				getServer().getLogger().info(uniqueName +".toblocktype" + "is missing or invalid and couldn't be loaded");
+				continue;
 			}
 
-			if(getConfig().isString(uniqueName +".name")
-					&& getConfig().isInt(uniqueName +".fromblocktype")
-					&& getConfig().isInt(uniqueName +".toblocktype")){
-
-				String name = getConfig().getString(uniqueName +".name");
-				int fromBlockType = getConfig().getInt(uniqueName +".fromblocktype");
-				int toBlockType = getConfig().getInt(uniqueName +".toblocktype");
-				Material from = Material.getMaterial(fromBlockType);
-				MaterialWithData to;
-				if(getConfig().isInt(uniqueName +".toblockdata")){
-					byte toBlockData = (byte)getConfig().getInt(uniqueName +".toblockdata");
-					to = new MaterialWithData(Material.getMaterial(toBlockType), toBlockData);
+			String name = getConfig().getString(uniqueName +".name");
+			int fromBlockType = getConfig().getInt(uniqueName +".fromblocktype");
+			int toBlockType = getConfig().getInt(uniqueName +".toblocktype");
+			Material from = Material.getMaterial(fromBlockType);
+			MaterialWithData to;
+			if(getConfig().isInt(uniqueName +".toblockdata")){
+				byte toBlockData = (byte)getConfig().getInt(uniqueName +".toblockdata");
+				to = new MaterialWithData(Material.getMaterial(toBlockType), toBlockData);
+			}else{
+				if(getConfig().isBoolean(uniqueName +".useplacedblockdata")){
+					to = new MaterialWithData(Material.getMaterial(toBlockType), getConfig().getBoolean(uniqueName +".useplacedblockdata"));
 				}else{
-					if(getConfig().isBoolean(uniqueName +".useplacedblockdata")){
-						to = new MaterialWithData(Material.getMaterial(toBlockType), getConfig().getBoolean(uniqueName +".useplacedblockdata"));
-					}else{
-						to = new MaterialWithData(Material.getMaterial(toBlockType), false);
-					}
+					getServer().getLogger().info(uniqueName +".toblockdata" + "is missing or invalid and " + uniqueName + ".useplacedblockdata is not set to true.");
+					continue;
 				}
-				BlockTransform bt = new BlockTransform(from, to, name);
-				blockTransforms.add(bt);
 			}
+			BlockTransform bt = new BlockTransform(from, to, name);
+			blockTransforms.add(bt);
 		}
 	}
-	
-	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
+
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = false)
 	public void afterMushroomPlace(BlockPlaceEvent e){
 		if(e.getItemInHand() != null && e.getBlock() != null){
 			for(BlockTransform transform : blockTransforms){
@@ -74,10 +71,4 @@ public class MushroomManipulatorMadnessPlugin extends JavaPlugin implements List
 			}
 		}
 	}
-	
-	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerDeath(PlayerDeathEvent e){
-		e.setKeepInventory(true);
-	}
-
 }
